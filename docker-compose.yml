@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  php:
+    image: 'php:5.6.14-apache'
+    container_name: 'esin_server'
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+    links:
+    - db
+  db:
+    image: postgres
+    container_name: 'postgres'
+    ports:
+      - 5432:5432
+    volumes:
+    - /var/lib/postgresql/data
+    environment:
+    - 'POSTGRES_USER=postgres'
+    - 'POSTGRES_PASSWORD=postgres'
