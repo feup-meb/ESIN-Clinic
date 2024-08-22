@@ -1,21 +1,28 @@
-version: "3.9"
+version: '3.8'
 services:
   php:
-    image: 'php:5.6.14-apache'
     container_name: 'esin_server'
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./src:/var/www/html
-    links:
-    - db
+    depends_on:
+      - db
   db:
     image: postgres
-    container_name: 'postgres'
+    container_name: postgres
     ports:
       - 5432:5432
+    expose:
+      - '5432'
     volumes:
-    - /var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /var/lib/postgresql/data
     environment:
-    - 'POSTGRES_USER=postgres'
-    - 'POSTGRES_PASSWORD=postgres'
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: localhost
